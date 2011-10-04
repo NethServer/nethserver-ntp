@@ -27,7 +27,6 @@ foreach my $file (
 $event = "timeserver-update";
 
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/rsyslog");
 
 #--------------------------------------------------
 # actions for timezone-update event
