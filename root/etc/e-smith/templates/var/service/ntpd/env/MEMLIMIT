@@ -1,1 +1,0 @@
-{ $OUT = ($ntpd{MemLimit} > "6000000") ? $ntpd{MemLimit} : "6000000" }
