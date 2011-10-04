@@ -1,0 +1,19 @@
+{
+    my $NTPenabled = $ntpd{'status'} || 'disabled';
+    my $server = $ntpd{NTPServer} || '';
+    if ($NTPenabled eq 'enabled')
+    {
+        if ($server =~ /pool.ntp.org/)
+        {
+            $OUT .= "0.$server";
+        }
+        else
+        {
+            $OUT .= "$server";
+        }
+    }
+    else
+    {
+        $OUT .= "# ntpd service is disabled";
+    }
+}

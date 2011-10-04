@@ -1,0 +1,5 @@
+{
+    my $timezone = $TimeZone || "US/Eastern";
+
+    $OUT .= "ZONE=\"$timezone\"";
+}

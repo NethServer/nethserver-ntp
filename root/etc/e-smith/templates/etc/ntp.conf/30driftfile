@@ -1,0 +1,3 @@
+{
+    $OUT = "driftfile /etc/ntp/drift";
+}
