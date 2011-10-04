@@ -3,13 +3,6 @@
 use esmith::Build::CreateLinks qw(:all);
 
 #--------------------------------------------------
-# actions for manager panel
-#--------------------------------------------------
-my $panel = "manager";
-
-panel_link("datetime", $panel);
-
-#--------------------------------------------------
 # actions for ip-change event
 #--------------------------------------------------
 
@@ -19,7 +12,7 @@ safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
 
 # Configuration template expansion of ntp.conf
 foreach my $file (
-    qw(/etc/ntp/step-tickers /etc/ntp.conf /var/service/ntpd/env/MEMLIMIT))
+    qw(/etc/ntp/step-tickers /etc/ntp.conf /etc/sysconfig/clock))
 {
     templates2events($file, qw(
 	    timeserver-update
@@ -34,7 +27,7 @@ foreach my $file (
 $event = "timeserver-update";
 
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/syslog");
+safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/rsyslog");
 
 #--------------------------------------------------
 # actions for timezone-update event
@@ -45,9 +38,9 @@ $event = "timezone-update";
 event_link("conf-timezone", $event, "30");
 event_link("set-time-date", $event, "40");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/crond");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/syslog");
+safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/rsyslog");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/squid");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd-e-smith");
+safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd");
 
 #--------------------------------------------------
 # actions for bootstrap-console-save event
@@ -57,9 +50,3 @@ $event = "bootstrap-console-save";
 
 event_link("conf-timezone", $event, "60");
 
-# Link smbd and nmbd to daemontools.
-safe_symlink("../daemontools", "root/etc/rc.d/init.d/supervise/ntpd");
-
-service_link_enhanced("ntpd", "S80", "7");
-safe_symlink("../init.d/supervise/ntpd", "root/etc/rc.d/rc6.d/K26ntpd");
-safe_symlink("../init.d/supervise/ntpd", "root/etc/rc.d/rc0.d/K26ntpd");
