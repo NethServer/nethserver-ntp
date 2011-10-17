@@ -8,38 +8,39 @@ use esmith::Build::CreateLinks qw(:all);
 
 $event = "ip-change";
 
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
-
-# Configuration template expansion of ntp.conf
-foreach my $file (
-    qw(/etc/ntp/step-tickers /etc/ntp.conf /etc/sysconfig/clock))
-{
-    templates2events($file, qw(
-	    timeserver-update
-	    bootstrap-console-save
-	));
-}
+safe_symlink("condrestart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
 
 #--------------------------------------------------
-# actions for timeserver-update event
+# actions for time-manual-update event
 #--------------------------------------------------
  
-$event = "timeserver-update";
+$event = "time-manual-update";
 
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
-
-#--------------------------------------------------
-# actions for timezone-update event
-#--------------------------------------------------
- 
-$event = "timezone-update";
-
-event_link("conf-timezone", $event, "30");
-event_link("set-time-date", $event, "40");
+event_link("time-update", $event, "40");
+templates2events("/etc/sysconfig/clock", $event);
+templates2events("/etc/ntp/step-tickers", $event);
+templates2events("/etc/ntp.conf", $event);
+safe_symlink("stop", "root/etc/e-smith/events/$event/services2adjust/ntpd");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/crond");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/rsyslog");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/squid");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd");
+
+
+#--------------------------------------------------
+# actions for time-auto-update event
+#--------------------------------------------------
+
+$event = "time-auto-update";
+
+event_link("time-update", $event, "40");
+templates2events("/etc/sysconfig/clock", $event);
+templates2events("/etc/ntp/step-tickers", $event);
+templates2events("/etc/ntp.conf", $event);
+safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
+safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/crond");
+safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/rsyslog");
+safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd");
+
 
 #--------------------------------------------------
 # actions for bootstrap-console-save event
@@ -47,7 +48,10 @@ safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd");
  
 $event = "bootstrap-console-save";
 
-event_link("conf-timezone", $event, "60");
+event_link("time-update", $event, "60");
+templates2events("/etc/ntp.conf", $event);
+templates2events("/etc/ntp/step-tickers", $event);
+templates2events("/etc/sysconfig/clock", $event);
 
 
 #--------------------------------------------------
@@ -59,4 +63,5 @@ $event = "nethserver-ntp-update";
 templates2events("/etc/ntp.conf", $event);
 templates2events("/etc/ntp/step-tickers", $event);
 templates2events("/etc/sysconfig/clock", $event);
+safe_symlink("condrestart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
 

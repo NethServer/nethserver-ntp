@@ -1,4 +1,0 @@
-#!/bin/sh
-
-/bin/date "$2"
-/sbin/clock -u -w

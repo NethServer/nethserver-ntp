@@ -28,6 +28,8 @@ use esmith::templates;
 
 my $db = esmith::ConfigDB->open or die "Could not open config db";
 
+my $event = shift || "";
+
 # Obtain the TimeZone configuration database value
 my $timezone = $db->get("TimeZone");
 
@@ -60,7 +62,20 @@ else
 unlink "/etc/localtime";
 symlink "../usr/share/zoneinfo/$timezone", "/etc/localtime";
     
-# Process the template for /etc/sysconfig/clock
-processTemplate ({TEMPLATE_PATH => "/etc/sysconfig/clock"});
+my $ntp = $db->get('ntpd');
+
+if( $ntp->get_prop('status') eq 'enabled') #automatic ntp
+{
+    my $server = $ntp->get_prop("NTPServer");
+    system("/sbin/chkconfig ntpd on");
+    system("/usr/sbin/ntpdate -b -p 8 $server"); 
+}
+else # manual date
+{
+    system("/sbin/chkconfig ntpd off");
+    system("/bin/date '$2'");
+    system("/sbin/clock -u -w");
+   
+}
 
 exit (0);
