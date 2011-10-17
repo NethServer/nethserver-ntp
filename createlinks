@@ -22,7 +22,6 @@ templates2events("/etc/ntp/step-tickers", $event);
 templates2events("/etc/ntp.conf", $event);
 safe_symlink("stop", "root/etc/e-smith/events/$event/services2adjust/ntpd");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/crond");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/rsyslog");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd");
 
 
@@ -38,7 +37,6 @@ templates2events("/etc/ntp/step-tickers", $event);
 templates2events("/etc/ntp.conf", $event);
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/crond");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/rsyslog");
 safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd");
 
 
