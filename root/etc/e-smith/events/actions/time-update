@@ -64,9 +64,9 @@ symlink "../usr/share/zoneinfo/$timezone", "/etc/localtime";
     
 my $ntp = $db->get('ntpd');
 
-if( $ntp->get_prop('status') eq 'enabled') #automatic ntp
+if( $ntp->prop('status') eq 'enabled') #automatic ntp
 {
-    my $server = $ntp->get_prop("NTPServer");
+    my $server = $ntp->prop("NTPServer");
     system("/sbin/chkconfig ntpd on");
     system("/usr/sbin/ntpdate -b -p 8 $server"); 
 }
