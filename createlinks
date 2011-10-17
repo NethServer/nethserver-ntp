@@ -49,3 +49,14 @@ $event = "bootstrap-console-save";
 
 event_link("conf-timezone", $event, "60");
 
+
+#--------------------------------------------------
+# actions for nethserver-ntp-update event
+#--------------------------------------------------
+
+$event = "nethserver-ntp-update";
+
+templates2events("/etc/ntp.conf", $event);
+templates2events("/etc/ntp/step-tickers", $event);
+templates2events("/etc/sysconfig/clock", $event);
+
