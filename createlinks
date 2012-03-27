@@ -58,8 +58,14 @@ templates2events("/etc/sysconfig/clock", $event);
 
 $event = "nethserver-ntp-update";
 
-templates2events("/etc/ntp.conf", $event);
-templates2events("/etc/ntp/step-tickers", $event);
-templates2events("/etc/sysconfig/clock", $event);
-safe_symlink("condrestart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
+event_actions('nethserver-ntp-update',
+	      'initialize-default-databases' => '00',
+	      'firewall-adjust' => '30',
+	      'runlevel-adjust' => '30',
+	      'nethserver-ntp-conf' => '40');
+
+event_templates('nethserver-ntp-update',
+		"/etc/ntp.conf",
+		"/etc/ntp/step-tickers",
+		"/etc/sysconfig/clock");
 

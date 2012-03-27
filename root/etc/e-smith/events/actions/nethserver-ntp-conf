@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+#
+# NethServer NTP
+#
+# Copyright (C) 2012 Nethesis srl
+#
+
+use strict;
+
