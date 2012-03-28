@@ -51,7 +51,6 @@ class DateTime extends \Nethgui\Controller\AbstractController
 
         $timezoneCodes = array();
         $timezoneDatasource = array();
-        $systemTimezone = '';
 
         $this->fillTimezoneInfos($timezoneCodes, $timezoneDatasource, $this->systemTimezone);
 
@@ -109,22 +108,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
 
     protected function onParametersSaved($changedParameters)
     {
-        $statusChanged = FALSE;
-
-        if (in_array('status', $changedParameters)) {
-            $statusChanged = TRUE;
-        }
-
-        if ($statusChanged && $this->parameters['status'] === 'enabled') {
-            $this->getPlatform()->signalEvent('time-auto-update@post-process');
-        } elseif ($this->parameters['status'] === 'disabled') {
-            if (in_array('time', $changedParameters)
-                || in_array('date', $changedParameters)) {
-                $this->getPlatform()->signalEvent('time-manual-update@post-process', array(array($this, 'provideTimestamp')));
-            } else {
-                $this->getPlatform()->signalEvent('time-manual-update@post-process');
-            }
-        }
+        $this->getPlatform()->signalEvent('nethserver-ntp-save@post-process', array(array($this, 'provideTimestamp')));
     }
 
     /**
@@ -217,10 +201,4 @@ class DateTime extends \Nethgui\Controller\AbstractController
         return strtr('HH:MM', $this->getCurrentDateInfo());
     }
 
-    public function nextPath()
-    {
-        return "Login";
-    }
-
 }
-
