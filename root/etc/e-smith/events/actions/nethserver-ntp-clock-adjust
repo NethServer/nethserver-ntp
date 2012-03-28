@@ -16,15 +16,7 @@ my $ts = shift;
 my $db = esmith::ConfigDB->open or die "Could not open config db";
 my $status = $db->get_prop('ntpd', 'status') || '';
 
-if($status eq 'enabled') { 
-    # use NTP
-
-    my $server = $db->get_prop('ntpd', 'NTPServer');
-    if(system('/usr/sbin/ntpdate', '-b',  '-p', '8', $server) != 0) {
-	die("Failed to set date from remote server `$server`\n");
-    };
-
-} else { 
+if($status ne 'enabled') { 
     # manual date setting
     if( ! defined $ts) {
 	die("No timestamp specified");
@@ -34,10 +26,10 @@ if($status eq 'enabled') {
     if(system('/bin/date', $ts) != 0) {
 	die("Failed to set system time to `$ts`");
     }
-}
 
-if(system('/sbin/clock', '-u', '-w') != 0) {
-    die("Failed to set hardware clock to system time");
-}   
+    if(system('/sbin/clock', '-u', '-w') != 0) {
+	die("Failed to set hardware clock to system time");
+    }   
+}
 
 exit (0);

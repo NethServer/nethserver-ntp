@@ -13,7 +13,7 @@ use File::Copy;
 my $db = esmith::ConfigDB->open or die "Could not open config db";
 
 # Obtain the TimeZone configuration database value
-my $timezone = $db->get("TimeZone");
+my $timezone = $db->get_value("TimeZone");
 
 if ( ! defined $timezone) {
     die("Missing TimeZone value in configuration database!");
