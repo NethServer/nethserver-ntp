@@ -6,66 +6,39 @@ use esmith::Build::CreateLinks qw(:all);
 # actions for ip-change event
 #--------------------------------------------------
 
-$event = "ip-change";
-
-safe_symlink("condrestart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
-
-#--------------------------------------------------
-# actions for time-manual-update event
-#--------------------------------------------------
- 
-$event = "time-manual-update";
-
-event_link("time-update", $event, "40");
-templates2events("/etc/sysconfig/clock", $event);
-templates2events("/etc/ntp/step-tickers", $event);
-templates2events("/etc/ntp.conf", $event);
-safe_symlink("stop", "root/etc/e-smith/events/$event/services2adjust/ntpd");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/crond");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd");
-
+$event = 'ip-change';
+safe_symlink('condrestart', "root/etc/e-smith/events/$event/services2adjust/ntpd");
 
 #--------------------------------------------------
-# actions for time-auto-update event
-#--------------------------------------------------
-
-$event = "time-auto-update";
-
-event_link("time-update", $event, "40");
-templates2events("/etc/sysconfig/clock", $event);
-templates2events("/etc/ntp/step-tickers", $event);
-templates2events("/etc/ntp.conf", $event);
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/ntpd");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/crond");
-safe_symlink("restart", "root/etc/e-smith/events/$event/services2adjust/httpd");
-
-
-#--------------------------------------------------
-# actions for bootstrap-console-save event
+# actions for nethserver-ntp-save event
 #--------------------------------------------------
  
-$event = "bootstrap-console-save";
-
-event_link("time-update", $event, "60");
-templates2events("/etc/ntp.conf", $event);
-templates2events("/etc/ntp/step-tickers", $event);
-templates2events("/etc/sysconfig/clock", $event);
-
+event_actions('nethserver-ntp-save',
+	      'nethserver-ntp-localtime' => '40',
+	      'nethserver-ntp-clock-adjust' => '41',
+	      'runlevel-adjust' => 50);
+	      
 
 #--------------------------------------------------
 # actions for nethserver-ntp-update event
 #--------------------------------------------------
 
-$event = "nethserver-ntp-update";
-
 event_actions('nethserver-ntp-update',
 	      'initialize-default-databases' => '00',
 #	      'firewall-adjust' => '30',
 	      'runlevel-adjust' => '30',
-	      'nethserver-ntp-conf' => '40');
+	      'nethserver-ntp-localtime' => '40',
+	      'nethserver-ntp-clock-adjust' => '41');
 
-event_templates('nethserver-ntp-update',
-		"/etc/ntp.conf",
-		"/etc/ntp/step-tickers",
-		"/etc/sysconfig/clock");
+#--------------------------------------------------
+# templates
+#--------------------------------------------------
+
+event_templates($_,
+		'/etc/ntp.conf',
+		'/etc/ntp/step-tickers',
+		'/etc/sysconfig/clock') foreach(qw(
+  nethserver-ntp-update
+  nethserver-ntp-save
+));
 

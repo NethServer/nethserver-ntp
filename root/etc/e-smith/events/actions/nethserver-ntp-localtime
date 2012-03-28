@@ -1,0 +1,31 @@
+#!/usr/bin/perl -w
+
+#
+# NethServer Ntp
+#
+# Copyright (C) 2012 Nethesis srl
+#
+
+use strict;
+use esmith::ConfigDB;
+use File::Copy;
+
+my $db = esmith::ConfigDB->open or die "Could not open config db";
+
+# Obtain the TimeZone configuration database value
+my $timezone = $db->get("TimeZone");
+
+if ( ! defined $timezone) {
+    die("Missing TimeZone value in configuration database!");
+}
+      
+# Copy the timezone file instead of symlink, to respect CentOS behaviour
+my $zoneinfo = "/usr/share/zoneinfo/" . $timezone;
+
+if( ! -r $zoneinfo ) {
+    die("Could not find zoneinfo file for time zone `$timezone`. System timezone is unchanged.");
+} 
+
+copy($zoneinfo, "/etc/localtime") or die("Failed to copy `$zoneinfo` to /etc/localtime: $!");
+
+exit(0);
