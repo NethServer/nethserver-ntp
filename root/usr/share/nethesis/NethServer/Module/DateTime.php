@@ -108,7 +108,15 @@ class DateTime extends \Nethgui\Controller\AbstractController
 
     protected function onParametersSaved($changedParameters)
     {
-        $this->getPlatform()->signalEvent('nethserver-ntp-save@post-process', array(array($this, 'provideTimestamp')));
+        if ($this->parameters['status'] === 'enabled') {
+            $cond = array('status', 'server', 'timezone');
+        } else {
+            $cond = array('status', 'time', 'date', 'timezone');
+        }
+
+        if (count(array_intersect($cond, $changedParameters)) > 0) {
+            $this->getPlatform()->signalEvent('nethserver-ntp-save@post-process', array(array($this, 'provideTimestamp')));
+        }       
     }
 
     /**
