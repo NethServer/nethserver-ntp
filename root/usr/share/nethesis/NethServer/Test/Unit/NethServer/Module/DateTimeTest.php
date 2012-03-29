@@ -20,7 +20,6 @@ class DateTimeTest extends \Test\Tool\ModuleTestCase
             '|^/bin/date|' => '2010|12|31|12|00|30',
             '|^/usr/bin/find|' => strtr("%{PREFIX}Europe/Rome\n%{PREFIX}Europe/Berlin\n", array('%{PREFIX}' => \NethServer\Module\DateTime::ZONEINFO_DIR)),
             '|^/usr/bin/readlink|' => \NethServer\Module\DateTime::ZONEINFO_DIR . 'Europe/Rome',
-            '|^/usr/sbin/ntpdate|' => array(0, '')
         ));
         return array(array($env1));
     }

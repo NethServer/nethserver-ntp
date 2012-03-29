@@ -41,13 +41,17 @@ class DateTime extends \Nethgui\Controller\AbstractController
     public function initialize()
     {
         parent::initialize();
-        $this->declareParameter('status', Validate::SERVICESTATUS, array('configuration', 'ntpd', 'status'));
-        $this->declareParameter('server', Validate::HOSTADDRESS, array('configuration', 'ntpd', 'NTPServer'));
-
-        $module = $this;
-
+        
+        // Check if server ntp udp OR tcp port is open:
+        $serverValidator = $this->getPlatform()->createValidator(Validate::HOSTNAME)->orValidator(
+            $this->getPlatform()->createValidator()->platform('remote-port', '123', 'udp'),
+            $this->getPlatform()->createValidator()->platform('remote-port', '123', 'tcp')
+         );
+                        
+        $this->declareParameter('status', Validate::SERVICESTATUS, array('configuration', 'ntpd', 'status'));        
         $this->declareParameter('date', Validate::DATE, array($this, 'getCurrentDate'));
         $this->declareParameter('time', Validate::TIME, array($this, 'getCurrentTime'));
+        $this->declareParameter('server', $serverValidator, array('configuration', 'ntpd', 'NTPServer'));
 
         $timezoneCodes = array();
         $timezoneDatasource = array();
@@ -61,30 +65,13 @@ class DateTime extends \Nethgui\Controller\AbstractController
 
     public function bind(\Nethgui\Controller\RequestInterface $request)
     {
-        parent::bind($request);
-
-        $dateInfo = FALSE;
+        parent::bind($request);        
 
         if ( ! $this->parameters['timezone']) {
             $this->parameters['timezone'] = $this->systemTimezone;
         }
     }
 
-    /**
-     * Custom validation procedure to check the NTP server response
-     * @param \Nethgui\Controller\ValidationReportInterface $report
-     */
-    public function validate(\Nethgui\Controller\ValidationReportInterface $report)
-    {
-        parent::validate($report);
-        $ntpFailureReason = '';
-        if ( ! $report->hasValidationErrors()
-            && $this->getRequest()->hasParameter('server')
-            && ! $this->isNtpReachable($this->parameters['server'], $ntpFailureReason)
-        ) {
-            $report->addValidationErrorMessage($this, 'server', "NTP server problem:\n\${0}", array('${0}' => $ntpFailureReason));
-        }
-    }
 
     /**
      * Parses `date` and `time` parameters and builds a timestamp for
@@ -119,26 +106,6 @@ class DateTime extends \Nethgui\Controller\AbstractController
         }       
     }
 
-    /**
-     * Check if the given $ntpHost is reachable
-     * @param string $ntpHost
-     * @param string $failureReason The output parameter where the reason of failure is written.
-     * @return bool TRUE on success FALSE otherwise.
-     */
-    private function isNtpReachable($ntpHost, &$failureReason)
-    {
-        $retval = 0;
-        $statusInfo = $this->getPlatform()->exec('/usr/sbin/ntpdate -q ${1} 2>&1', array($ntpHost));
-
-        $output = \Nethgui\array_end($statusInfo->getOutputArray());
-        $retval = $statusInfo->getExitCode();
-
-        if ($retval != 0) {
-            $failureReason = substr($output, strpos($output, ': ') + 2);
-        }
-        return $retval === 0;
-    }
-
     public function prepareView(\Nethgui\View\ViewInterface $view)
     {
         if ($view->getTargetFormat() === $view::TARGET_JSON) {
@@ -150,7 +117,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
 
     /**
      *
-     * REQUIRE readlink, find commands
+     * REQUIRE find command
      *
      * @param array $timezoneCodes
      * @param array $timezoneDatasource
@@ -162,7 +129,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
         $zoneInfoDir = self::ZONEINFO_DIR;
         $cutpoint1 = strlen($zoneInfoDir);
 
-        $localtime = trim($this->getPlatform()->exec('/usr/bin/readlink -f /etc/localtime')->getOutput());
+        $localtime = $zoneInfoDir . $this->getPlatform()->getDatabase('configuration')->getKey('TimeZone');
         $zoneList = $this->getPlatform()->exec('/usr/bin/find ${1} -type f', array($zoneInfoDir))->getOutputArray();
 
         sort($zoneList);
