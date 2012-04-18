@@ -6,8 +6,8 @@ use esmith::Build::CreateLinks qw(:all);
 # actions for ip-change event
 #--------------------------------------------------
 
-$event = 'ip-change';
-safe_symlink('condrestart', "root/etc/e-smith/events/$event/services2adjust/ntpd");
+# $event = 'ip-change';
+# safe_symlink('condrestart', "root/etc/e-smith/events/$event/services2adjust/ntpd");
 
 #--------------------------------------------------
 # actions for nethserver-ntp-save event
@@ -23,7 +23,7 @@ event_actions('nethserver-ntp-save',
 #--------------------------------------------------
 event_actions('nethserver-ntp-update',
 	      'initialize-default-databases' => '00',
-#	      'firewall-adjust' => '30',
+	      'firewall-adjust' => '35',
 	      'runlevel-adjust' => '30',
 	      'nethserver-ntp-localtime' => '40',
 	      'nethserver-ntp-clock-adjust' => '41');
