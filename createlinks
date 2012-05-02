@@ -21,6 +21,10 @@ event_actions('nethserver-ntp-save',
 #--------------------------------------------------
 # actions for nethserver-ntp-update event
 #--------------------------------------------------
+event_templates('nethserver-ntp-update',
+		'/etc/hosts.allow',
+		'/etc/hosts.deny');
+
 event_actions('nethserver-ntp-update',
 	      'initialize-default-databases' => '00',
 	      'firewall-adjust' => '35',
