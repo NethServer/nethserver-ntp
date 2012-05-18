@@ -12,7 +12,7 @@ use NethServer::Service;
 my $errors = 0;
 
 NethServer::Service::manage_add('nethserver-ntp',
-				'ntp');
+				'ntpd');
 
 exit($errors == 0 ? 0 : 1);
 
