@@ -27,6 +27,7 @@ event_templates('nethserver-ntp-update',
 
 event_actions('nethserver-ntp-update',
 	      'initialize-default-databases' => '00',
+	      'nethserver-ntp-conf' => '20',
 	      'firewall-adjust' => '35',
 	      'runlevel-adjust' => '30',
 	      'nethserver-ntp-localtime' => '40',
