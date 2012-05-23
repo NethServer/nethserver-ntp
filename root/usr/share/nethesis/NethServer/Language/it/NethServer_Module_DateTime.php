@@ -19,3 +19,5 @@ $L['time-auto-update_success'] = 'Errore durante la configurazione dell\'ora di 
 $L['time-manual-update_success'] = 'Errore durante la configurazione dell\'ora di sistema.';
 
 $L['DateTime_Tags'] = 'ora minuto fuso orario fusorario data ntp';
+
+$L['valid_platform,ntp-server,ntp-server,1'] = 'Servizio NTP non disponibile: ${reason}';

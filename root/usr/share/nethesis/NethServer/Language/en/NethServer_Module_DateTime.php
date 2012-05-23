@@ -15,3 +15,5 @@ $L["NTP server problem:\n\${0}"] = "An error occured with NTP server:\n\"\${0}\"
 
 $L['time-manual-update_success'] = 'New system date and time is set.';
 $L['time-auto-update_success'] = 'New system date and time is set using network synchronization.';
+
+$L['valid_platform,ntp-server,ntp-server,1'] = 'NTP service is not available: ${reason}';
