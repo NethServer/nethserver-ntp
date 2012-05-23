@@ -43,10 +43,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
         parent::initialize();
         
         // Check if server ntp udp OR tcp port is open:
-        $serverValidator = $this->getPlatform()->createValidator(Validate::HOSTNAME)->orValidator(
-            $this->getPlatform()->createValidator()->platform('remote-port', '123', 'udp'),
-            $this->getPlatform()->createValidator()->platform('remote-port', '123', 'tcp')
-         );
+        $serverValidator = $this->getPlatform()->createValidator(Validate::HOSTNAME)->platform('ntp-server');
                         
         $this->declareParameter('status', Validate::SERVICESTATUS, array('configuration', 'ntpd', 'status'));        
         $this->declareParameter('date', Validate::DATE, array($this, 'getCurrentDate'));

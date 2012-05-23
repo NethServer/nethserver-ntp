@@ -44,3 +44,8 @@ event_templates($_,
   nethserver-ntp-save
 ));
 
+#--------------------------------------------------
+# ntp server validator
+#--------------------------------------------------
+validator_actions('ntp-server',
+		  'ntp-server' => '20');

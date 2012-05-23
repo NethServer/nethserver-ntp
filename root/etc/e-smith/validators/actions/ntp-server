@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+
+#
+# ntp-server -- check if the given hostname has an ntp service
+#
+# Copyright (C) 2012 Nethesis srl
+#
+
+use strict;
+
+my $host = shift || die("Missing host argument");
+
+my $output = qx(/usr/sbin/ntpq -c 'hostnames no' -p $host 2>&1);
+
+if($? != 0) {
+    die('ntpq error ' . $!);
+}
+
+my @lines = split("\n", $output);
+
+# save the first line in case an error occurred:
+my $firstLine = @lines[0];
+
+# the first two lines contain the header, skip them:
+splice(@lines, 0, 2);
+
+foreach(@lines) {
+    # see ntpq tally codes:
+    if($_ =~ m/^[o\*\+\#]/) {
+	exit 0;
+    }
+}
+
+print $firstLine . "\n";
+exit 1;
