@@ -12,19 +12,6 @@ AutoReq: no
 Requires: nethserver-base
 Requires: ntp
 
-%changelog
-* Wed Mar 28 2012 Davide Principi <davide.principi@nethesis.it> - 6.2.4-1.nh
-- renamed events and actions
-
-* Tue Mar 27 2012 Davide Principi <davide.principi@nethesis.it> - 6.2.0-3.nh
-- ntp startup on nethserver-ntp-update event; upgraded version number
-
-* Tue Feb  7 2012 Davide <davide.principi@nethesis.it> - 2.3.0-2.nh
-- Increased nethserver-base minversion 6.0.0
-
-* Tue Oct 04 2011 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> -  2.3.0-1.nh
-- First release for NethServer based on e-smith-ntp 2.2.0-4.sme
-
 %description
 Configuration files and templates for the NTP daemon.
 
@@ -50,3 +37,7 @@ event_queue add %{name}-update
 
 %files -f %{name}-%{version}-filelist
 %defattr(-,root,root)
+
+
+%changelog
+
