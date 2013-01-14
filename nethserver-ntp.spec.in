@@ -5,7 +5,7 @@ Release: @@RELEASE@@
 License: GPL
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-BuildRequires: nethserver-devtools >= 2.3.4
+BuildRequires: nethserver-devtools
 URL: http://dev.nethesis.it/projects/%{name}
 AutoReq: no
 
