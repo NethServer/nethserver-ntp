@@ -6,7 +6,7 @@ License: GPL
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 BuildRequires: nethserver-devtools
-URL: http://dev.nethesis.it/projects/%{name}
+URL: %{url_prefix}/%{name} 
 AutoReq: no
 
 Requires: nethserver-base
