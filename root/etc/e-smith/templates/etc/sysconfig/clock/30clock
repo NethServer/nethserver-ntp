@@ -1,5 +1,5 @@
 {
-    my $timezone = $TimeZone || "US/Eastern";
+    my $timezone = $TimeZone || "Greenwich";
 
     $OUT .= "ZONE=\"$timezone\"";
 }

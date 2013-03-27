@@ -31,7 +31,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
 {
     const ZONEINFO_DIR = '/usr/share/zoneinfo/';
 
-    private $systemTimezone = 'Europe/Rome';
+    private $systemTimezone = 'Greenwich';
 
     protected function initializeAttributes(\Nethgui\Module\ModuleAttributesInterface $base)
     {
