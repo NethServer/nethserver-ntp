@@ -69,3 +69,11 @@ event_templates($_,
 #--------------------------------------------------
 validator_actions('ntp-server',
 		  'ntp-server' => '20');
+
+#--------------------------------------------------
+# actions for migration-import event
+#--------------------------------------------------
+
+$event = "migration-import";
+event_actions($event, 'nethserver-ntp-migrate' => 50);
+
