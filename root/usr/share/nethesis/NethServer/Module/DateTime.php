@@ -29,7 +29,7 @@ use Nethgui\System\PlatformInterface as Validate;
  */
 class DateTime extends \Nethgui\Controller\AbstractController
 {
-    const ZONEINFO_DIR = '/usr/share/zoneinfo/';
+    const ZONEINFO_DIR = '/usr/share/zoneinfo/posix/';
 
     private $systemTimezone = 'Greenwich';
 
@@ -122,8 +122,12 @@ class DateTime extends \Nethgui\Controller\AbstractController
      */
     private function fillTimezoneInfos(&$timezoneCodes, &$timezoneDatasource, &$currentTimezone)
     {
-        $acceptAreas = array('Africa', 'America', 'Antarctica', 'Arctic', 'Atlantic', 'Etc', 'Europe', 'Indian', 'Mideast', 'Pacific');
         $zoneInfoDir = self::ZONEINFO_DIR;
+        $tmp = $this->getPlatform()->exec('/usr/bin/find ${1} -maxdepth 1 -type d', array($zoneInfoDir))->getOutputArray();
+        foreach($tmp as $area) {
+           $acceptAreas[] = basename($area);
+        }
+        
         $cutpoint1 = strlen($zoneInfoDir);
 
         $localtime = $zoneInfoDir . $this->getPlatform()->getDatabase('configuration')->getKey('TimeZone');
@@ -135,15 +139,18 @@ class DateTime extends \Nethgui\Controller\AbstractController
             $zoneinfo = substr($zoneinfo, $cutpoint1);
             $cutpoint2 = strpos($zoneinfo, '/');
             $area = substr($zoneinfo, 0, $cutpoint2);
+            $timezoneCodes[] = $zoneinfo;
             if (in_array($area, $acceptAreas)) {
-                $timezoneCodes[] = $zoneinfo;
                 $timezoneDatasource[$area][$zoneinfo] = str_replace('_', ' ', substr($zoneinfo, $cutpoint2 + 1));
-                if ($localtime == $zoneinfo) {
-                    // found the current time zone
-                    $currentTimezone = $zoneinfo;
-                }
+            } else {
+                $sparse[$zoneinfo] = str_replace('_', ' ', substr($zoneinfo, $cutpoint2));
+            }
+            if ($localtime == $zoneinfo) {
+                // found the current time zone
+                $currentTimezone = $zoneinfo;
             }
         }
+         $timezoneDatasource['Posix'] = $sparse;
 
         if ( ! $currentTimezone) {
             $currentTimezone = FALSE;
