@@ -34,8 +34,7 @@ use esmith::Build::CreateLinks qw(:all);
 #--------------------------------------------------
 event_actions('nethserver-ntp-save',
 	      'nethserver-ntp-localtime' => '40',
-	      'nethserver-ntp-clock-adjust' => '41',
-	      'runlevel-adjust' => 50);
+	      'nethserver-ntp-clock-adjust' => '41');
 	      
 
 #--------------------------------------------------
