@@ -36,6 +36,7 @@ event_actions('nethserver-ntp-save',
 	      'nethserver-ntp-localtime' => '40',
 	      'nethserver-ntp-clock-adjust' => '41');
 	      
+event_services('nethserver-ntp-save', 'rsyslog' => 'restart');
 
 #--------------------------------------------------
 # actions for nethserver-ntp-update event
