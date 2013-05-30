@@ -1,0 +1,18 @@
+#
+# 10servers
+#
+{
+    my $server = $ntpd{NTPServer} || '';
+
+    if(! $server) {
+	return "# missing ntpd/NTPServer prop value\n" 
+    }
+
+    if ($server =~ /\.?pool\.ntp\.org$/) {
+	# Special configuration for *ntp.org
+        $OUT .= "server $_.$server\n" for (0..3);
+    } else {
+        $OUT .= "server $server\n";
+    }
+}
+
