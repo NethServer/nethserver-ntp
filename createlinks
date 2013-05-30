@@ -47,11 +47,10 @@ event_templates('nethserver-ntp-update',
 		'/etc/hosts.allow',
 		'/etc/hosts.deny');
 
-event_actions('nethserver-ntp-update' qw(
+event_actions('nethserver-ntp-update', qw(
 	      initialize-default-databases 00
 	      nethserver-ntp-localtime 40
 	      nethserver-ntp-clock-adjust 41
-              runlevel-adjust 50
 ));
 
 #--------------------------------------------------
@@ -59,7 +58,6 @@ event_actions('nethserver-ntp-update' qw(
 #--------------------------------------------------
 event_templates($_,
 		'/etc/ntp.conf',
-		'/etc/ntp/step-tickers',
 		'/etc/sysconfig/clock') foreach(qw(
   nethserver-ntp-update
   nethserver-ntp-save
