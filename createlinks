@@ -32,9 +32,11 @@ use esmith::Build::CreateLinks qw(:all);
 #--------------------------------------------------
 # actions for nethserver-ntp-save event
 #--------------------------------------------------
-event_actions('nethserver-ntp-save',
-	      'nethserver-ntp-localtime' => '40',
-	      'nethserver-ntp-clock-adjust' => '41');
+event_actions('nethserver-ntp-save', qw(
+	      nethserver-ntp-localtime 40
+	      nethserver-ntp-clock-adjust 41
+              runlevel-adjust 50
+));
 	      
 event_services('nethserver-ntp-save', 'rsyslog' => 'restart');
 
@@ -45,10 +47,12 @@ event_templates('nethserver-ntp-update',
 		'/etc/hosts.allow',
 		'/etc/hosts.deny');
 
-event_actions('nethserver-ntp-update',
-	      'initialize-default-databases' => '00',
-	      'nethserver-ntp-localtime' => '40',
-	      'nethserver-ntp-clock-adjust' => '41');
+event_actions('nethserver-ntp-update' qw(
+	      initialize-default-databases 00
+	      nethserver-ntp-localtime 40
+	      nethserver-ntp-clock-adjust 41
+              runlevel-adjust 50
+));
 
 #--------------------------------------------------
 # templates
@@ -60,12 +64,6 @@ event_templates($_,
   nethserver-ntp-update
   nethserver-ntp-save
 ));
-
-#--------------------------------------------------
-# ntp server validator
-#--------------------------------------------------
-validator_actions('ntp-server',
-		  'ntp-server' => '20');
 
 #--------------------------------------------------
 # actions for migration-import event
