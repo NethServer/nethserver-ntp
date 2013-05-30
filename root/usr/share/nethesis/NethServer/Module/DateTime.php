@@ -31,7 +31,9 @@ class DateTime extends \Nethgui\Controller\AbstractController
 {
     const ZONEINFO_DIR = '/usr/share/zoneinfo/posix/';
 
-    private $systemTimezone = 'Greenwich';
+    private $tzValue = 'Greenwich';
+    private $tzCodes = array();
+    private $tzDatasource = array();
 
     protected function initializeAttributes(\Nethgui\Module\ModuleAttributesInterface $base)
     {
@@ -46,26 +48,28 @@ class DateTime extends \Nethgui\Controller\AbstractController
         $this->declareParameter('date', Validate::DATE, array($this, 'getCurrentDate'));
         $this->declareParameter('time', Validate::TIME, array($this, 'getCurrentTime'));
         $this->declareParameter('server', Validate::HOSTNAME, array('configuration', 'ntpd', 'NTPServer'));
-
-        $timezoneCodes = array();
-        $timezoneDatasource = array();
-
-        $this->fillTimezoneInfos($timezoneCodes, $timezoneDatasource, $this->systemTimezone);
-
-        $this->declareParameter('timezone', $this->createValidator()->memberOf($timezoneCodes), array('configuration', 'TimeZone', NULL));
-
-        $this->parameters['timezoneDatasource'] = \Nethgui\Renderer\AbstractRenderer::hashToDatasource($timezoneDatasource);
+        $this->declareParameter('timezone', $this->createValidator(), array('configuration', 'TimeZone', NULL));
     }
 
     public function bind(\Nethgui\Controller\RequestInterface $request)
     {
         parent::bind($request);        
 
-        if ( ! $this->parameters['timezone']) {
-            $this->parameters['timezone'] = $this->systemTimezone;
+        // Every 60 seconds the view sends a query to refresh its date
+        // and time controls, adding "tsquery" argument:
+        if ( ! $request->hasArgument('tsonly')) {
+            $this->initTzInfos();
         }
+
     }
 
+    public function validate(\Nethgui\Controller\ValidationReportInterface $report)
+    {
+        if( $this->getRequest()->isMutation()) {
+            $this->getValidator('timezone')->memberOf($this->tzCodes);
+        }
+        parent::validate($report);
+    }
 
     /**
      * Parses `date` and `time` parameters and builds a timestamp for
@@ -102,22 +106,24 @@ class DateTime extends \Nethgui\Controller\AbstractController
 
     public function prepareView(\Nethgui\View\ViewInterface $view)
     {
-        if ($view->getTargetFormat() === $view::TARGET_JSON) {
-            // optimize bandwidth for ajax requests by clearing timezoneDatasource:
-            unset($this->parameters['timezoneDatasource']);
+        if($this->getRequest()->hasArgument('tsonly')) {
+            $view['time'] = $this->parameters['time'];
+            $view['date'] = $this->parameters['date'];
+        } else {
+            parent::prepareView($view);
+            if ($view->getTargetFormat() !== $view::TARGET_JSON) {
+                // optimize bandwidth for ajax requests by not sending tzDatasource:
+                $view['timezoneDatasource'] = \Nethgui\Renderer\AbstractRenderer::hashToDatasource($this->tzDatasource);
+            }
         }
-        parent::prepareView($view);
     }
 
     /**
      *
      * REQUIRE find command
      *
-     * @param array $timezoneCodes
-     * @param array $timezoneDatasource
-     * @param string $currentTimezone
      */
-    private function fillTimezoneInfos(&$timezoneCodes, &$timezoneDatasource, &$currentTimezone)
+    private function initTzInfos()
     {
         $zoneInfoDir = self::ZONEINFO_DIR;
         $tmp = $this->getPlatform()->exec('/usr/bin/find ${1} -maxdepth 1 -type d', array($zoneInfoDir))->getOutputArray();
@@ -127,7 +133,6 @@ class DateTime extends \Nethgui\Controller\AbstractController
         
         $cutpoint1 = strlen($zoneInfoDir);
 
-        $localtime = $zoneInfoDir . $this->getPlatform()->getDatabase('configuration')->getKey('TimeZone');
         $zoneList = $this->getPlatform()->exec('/usr/bin/find ${1} -type f', array($zoneInfoDir))->getOutputArray();
 
         sort($zoneList);
@@ -136,22 +141,16 @@ class DateTime extends \Nethgui\Controller\AbstractController
             $zoneinfo = substr($zoneinfo, $cutpoint1);
             $cutpoint2 = strpos($zoneinfo, '/');
             $area = substr($zoneinfo, 0, $cutpoint2);
-            $timezoneCodes[] = $zoneinfo;
+            $this->tzCodes[] = $zoneinfo;
             if (in_array($area, $acceptAreas)) {
-                $timezoneDatasource[$area][$zoneinfo] = str_replace('_', ' ', substr($zoneinfo, $cutpoint2 + 1));
+                $this->tzDatasource[$area][$zoneinfo] = str_replace('_', ' ', substr($zoneinfo, $cutpoint2 + 1));
             } else {
                 $sparse[$zoneinfo] = str_replace('_', ' ', substr($zoneinfo, $cutpoint2));
             }
-            if ($localtime == $zoneinfo) {
-                // found the current time zone
-                $currentTimezone = $zoneinfo;
-            }
         }
-         $timezoneDatasource['Posix'] = $sparse;
 
-        if ( ! $currentTimezone) {
-            $currentTimezone = FALSE;
-        }
+        $this->tzDatasource['Posix'] = $sparse;
+
     }
 
     private function getCurrentDateInfo()
