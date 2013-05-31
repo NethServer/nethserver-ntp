@@ -35,10 +35,13 @@ use esmith::Build::CreateLinks qw(:all);
 event_actions('nethserver-ntp-save', qw(
 	      nethserver-ntp-localtime 40
 	      nethserver-ntp-clock-adjust 41
-              runlevel-adjust 50
+              runlevel-adjust 99
 ));
 	      
-event_services('nethserver-ntp-save', 'rsyslog' => 'restart');
+event_services('nethserver-ntp-save', qw(
+    rsyslog condrestart
+    ntpd condrestart
+));
 
 #--------------------------------------------------
 # actions for nethserver-ntp-update event
@@ -52,6 +55,11 @@ event_actions('nethserver-ntp-update', qw(
 	      nethserver-ntp-localtime 40
 	      nethserver-ntp-clock-adjust 41
 ));
+
+event_services('nethserver-ntp-update', qw(
+    ntpd condrestart
+));
+
 
 #--------------------------------------------------
 # templates

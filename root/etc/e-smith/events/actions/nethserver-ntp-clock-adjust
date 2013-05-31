@@ -27,15 +27,13 @@
 use strict;
 use esmith::ConfigDB;
 
-my $event = shift || "";
+my $event = shift;
 my $ts = shift;
 
 my $db = esmith::ConfigDB->open or die "Could not open config db";
 my $status = $db->get_prop('ntpd', 'status') || '';
 
-if($status eq 'enabled') { 
-    qx(/sbin/service ntpd restart);
-} else {
+if($status ne 'enabled') { 
     # manual date setting
     if( ! defined $ts) {
 	die("No timestamp specified");
