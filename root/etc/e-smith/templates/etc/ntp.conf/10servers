@@ -2,17 +2,21 @@
 # 10servers
 #
 {
-    my $server = $ntpd{NTPServer} || '';
+    my $server_name = $ntpd{NTPServer} || '';
 
-    if(! $server) {
+    if( ! $server_name) {
 	return "# missing ntpd/NTPServer prop value\n" 
     }
 
-    if ($server =~ /\.?pool\.ntp\.org$/) {
+    if( ! $server_options) {
+	$server_options = 'iburst';
+    }
+
+    if ($server_name =~ /\.?pool\.ntp\.org$/) {
 	# Special configuration for *ntp.org
-        $OUT .= "server $_.$server\n" for (0..3);
+        $OUT .= "server $_.${server_name} ${server_options}\n" for (0..3);
     } else {
-        $OUT .= "server $server\n";
+        $OUT .= "server ${server_name} ${server_options}\n";
     }
 }
 
