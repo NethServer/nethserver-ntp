@@ -38,12 +38,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun  4 2013 Davide Principi <davide.principi@nethesis.it> - 1.0.4-1.ns6
+- Force ntpd syncronization with iburst option. Enhancement #1964 
+
 * Thu May 30 2013 Davide Principi <davide.principi@nethesis.it> - 1.0.3-1.ns6
-- Bugfix #1988
-- Fixed label translations #1988
+- NTP Server validation failed. Fixed label translations. Bug #1988
 
 * Tue Apr 30 2013 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.2-1.ns6
-• Rebuild for automatic package handling. #1870
+- Rebuild for automatic package handling. #1870
 
 * Tue Mar 19 2013 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.1-1
 - First release
