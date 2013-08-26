@@ -15,6 +15,7 @@ echo $view->fieldsetSwitch('status', 'enabled')
 
 echo $view->buttonList($view::BUTTON_SUBMIT | $view::BUTTON_HELP);
 
+$moduleUrl = json_encode($view->getModuleUrl("/DateTime?tsonly"));
 
 $view->includeJavascript("
 (function ( $ ) {
@@ -24,7 +25,7 @@ $view->includeJavascript("
         window.setInterval(function () {
             $.Nethgui.Server.ajaxMessage({
                 isMutation: false,
-                url: '/DateTime?tsonly'
+                url: $moduleUrl
             });
         }, 60000);
     });
