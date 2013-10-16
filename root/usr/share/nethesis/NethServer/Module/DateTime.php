@@ -57,7 +57,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
 
         // Every 60 seconds the view sends a query to refresh its date
         // and time controls, adding "tsquery" argument:
-        if ( ! $request->hasArgument('tsonly')) {
+        if ( ! $request->getParameter('tsonly') !== NULL) {
             $this->initTzInfos();
         }
 
@@ -106,7 +106,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
 
     public function prepareView(\Nethgui\View\ViewInterface $view)
     {
-        if($this->getRequest()->hasArgument('tsonly')) {
+        if($this->getRequest()->getParameter('tsonly') !== NULL) {
             $view['time'] = $this->parameters['time'];
             $view['date'] = $this->parameters['date'];
         } else {
