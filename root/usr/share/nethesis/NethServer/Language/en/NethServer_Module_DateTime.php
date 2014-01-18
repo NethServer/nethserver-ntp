@@ -1,6 +1,6 @@
 <?php 
 
-$L['DateTime_header'] = 'Set system date and time'; 
+$L['DateTime_header'] = 'Change current system date and time (${0})'; 
 $L['DateTime_Description'] = 'Set system date and time'; 
 $L['DateTime_Tags'] = 'hour minute timezone date time ntp'; 
 $L['DateTime_Title'] = 'Date and time'; 

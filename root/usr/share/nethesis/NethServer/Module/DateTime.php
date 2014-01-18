@@ -116,6 +116,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
                 $view['timezoneDatasource'] = \Nethgui\Renderer\AbstractRenderer::hashToDatasource($this->tzDatasource);
             }
         }
+        $view['current_datetime'] = sprintf("%s %s", $this->parameters['date'], $this->parameters['time']);
     }
 
     /**

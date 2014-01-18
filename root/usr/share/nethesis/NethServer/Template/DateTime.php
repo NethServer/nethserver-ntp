@@ -1,6 +1,6 @@
 <?php
 
-echo $view->header()->setAttribute('template', $T('DateTime_header'));
+echo $view->header('current_datetime')->setAttribute('template', $T('DateTime_header'));
 
 echo $view->selector('timezone', $view::SELECTOR_DROPDOWN);
 
