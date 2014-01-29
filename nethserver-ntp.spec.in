@@ -19,6 +19,7 @@ Configuration files and templates for the NTP daemon.
 %setup
 
 %build
+%{makedocs}
 perl createlinks
 
 %install
