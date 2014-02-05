@@ -39,6 +39,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 05 2014 Davide Principi <davide.principi@nethesis.it> - 1.0.6-1.ns6
+- NethCamp 2014 - Task #2618 [NethServer]
+- ntpd config db entry is missing UDPPort default property - Bug #2505 [NethServer]
+- Update all inline help documentation - Task #1780 [NethServer]
+
 * Thu Oct 17 2013 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.5-1.ns6
 - Add language code to URLs #2113
 - Db defaults: remove Runlevels property #2067
