@@ -46,10 +46,6 @@ event_services('nethserver-ntp-save', qw(
 #--------------------------------------------------
 # actions for nethserver-ntp-update event
 #--------------------------------------------------
-event_templates('nethserver-ntp-update',
-		'/etc/hosts.allow',
-		'/etc/hosts.deny');
-
 event_actions('nethserver-ntp-update', qw(
 	      initialize-default-databases 00
 	      nethserver-ntp-localtime 40

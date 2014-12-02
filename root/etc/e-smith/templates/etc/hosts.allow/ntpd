@@ -1,1 +1,0 @@
-ntpd	:	{ $ntpd{access} eq 'private' ? '/etc/localnetworks' : 'ALL' }
