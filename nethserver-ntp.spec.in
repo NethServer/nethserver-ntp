@@ -39,6 +39,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec 09 2014 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.7-1.ns6
+- Drop TCP wrappers hosts.allow hosts.deny templates - Enhancement #2785 [NethServer]
+
 * Wed Feb 05 2014 Davide Principi <davide.principi@nethesis.it> - 1.0.6-1.ns6
 - NethCamp 2014 - Task #2618 [NethServer]
 - ntpd config db entry is missing UDPPort default property - Bug #2505 [NethServer]
