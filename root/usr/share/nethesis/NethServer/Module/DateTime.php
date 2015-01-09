@@ -31,9 +31,8 @@ class DateTime extends \Nethgui\Controller\AbstractController
 {
     const ZONEINFO_DIR = '/usr/share/zoneinfo/posix/';
 
-    private $tzValue = 'Greenwich';
-    private $tzCodes = array();
-    private $tzDatasource = array();
+    protected $tzCodes = array();
+    protected $tzDatasource = array();
 
     protected function initializeAttributes(\Nethgui\Module\ModuleAttributesInterface $base)
     {
@@ -100,7 +99,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
         }
 
         if (count(array_intersect($cond, $changedParameters)) > 0) {
-            $this->getPlatform()->signalEvent('nethserver-ntp-save@post-process', array(array($this, 'provideTimestamp')));
+            $this->getPlatform()->signalEvent('nethserver-ntp-save', array(array($this, 'provideTimestamp')));
         }       
     }
 
@@ -111,10 +110,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
             $view['date'] = $this->parameters['date'];
         } else {
             parent::prepareView($view);
-            if ($view->getTargetFormat() !== $view::TARGET_JSON) {
-                // optimize bandwidth for ajax requests by not sending tzDatasource:
-                $view['timezoneDatasource'] = \Nethgui\Renderer\AbstractRenderer::hashToDatasource($this->tzDatasource);
-            }
+            $view['timezoneDatasource'] = \Nethgui\Renderer\AbstractRenderer::hashToDatasource($this->tzDatasource);            
         }
         $view['current_datetime'] = sprintf("%s %s", $this->parameters['date'], $this->parameters['time']);
     }
@@ -124,7 +120,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
      * REQUIRE find command
      *
      */
-    private function initTzInfos()
+    protected function initTzInfos()
     {
         $zoneInfoDir = self::ZONEINFO_DIR;
         $tmp = $this->getPlatform()->exec('/usr/bin/find ${1} -maxdepth 1 -type d', array($zoneInfoDir))->getOutputArray();
