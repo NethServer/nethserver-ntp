@@ -1,7 +1,7 @@
 Name: nethserver-ntp
 Summary: NethServer specific NTP configuration files and templates
-Version: @@VERSION@@
-Release: @@RELEASE@@
+Version: 1.0.7
+Release: 1
 License: GPL
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
