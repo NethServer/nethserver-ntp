@@ -36,6 +36,7 @@ class DateTime extends \NethServer\Module\DateTime {
     }
 
     protected function onParametersSaved($changes) {
+        $this->setPhpTimezone();
         $this->getParent()->storeAction(array(
             'message' => array(
                 'module' => $this->getIdentifier(),

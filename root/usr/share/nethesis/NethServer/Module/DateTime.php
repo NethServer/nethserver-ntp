@@ -99,8 +99,23 @@ class DateTime extends \Nethgui\Controller\AbstractController
         }
 
         if (count(array_intersect($cond, $changedParameters)) > 0) {
+            $this->setPhpTimezone();
             $this->getPlatform()->signalEvent('nethserver-ntp-save', array(array($this, 'provideTimestamp')));
         }       
+    }
+
+    protected function setPhpTimezone()
+    {
+        try {
+            new \DateTimeZone($this->parameters['timezone']);
+            $db = $this->getPlatform()->getDatabase('configuration');
+            if (count($db->getKey('php')) > 0) {
+                $db->setProp('php', array('DateTimezone' => $this->parameters['timezone']));
+            }
+        } catch (\Exception $e) {
+            @$undefined; // wrong timezone produces a runtime warning that must be silenced
+            $this->getLog()->error(sprintf("%s: failed to set %s as default PHP timezone for /etc/php.ini", __CLASS__, $this->parameters['timezone']));
+        }
     }
 
     public function prepareView(\Nethgui\View\ViewInterface $view)
