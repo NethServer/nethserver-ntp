@@ -44,6 +44,9 @@ if( ! -r $zoneinfo ) {
     die("Could not find zoneinfo file for time zone `$timezone`. System timezone is unchanged.");
 } 
 
-copy($zoneinfo, "/etc/localtime") or die("Failed to copy `$zoneinfo` to /etc/localtime: $!");
+# In CentOS 7 /etc/localtime is a symlink
+if(system(qw(ln -sf), $zoneinfo, "/etc/localtime") != 0) {
+    die("Failed link `$zoneinfo` to /etc/localtime: $!");
+}
 
 exit(0);
