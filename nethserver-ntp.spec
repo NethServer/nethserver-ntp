@@ -1,13 +1,12 @@
 Name: nethserver-ntp
 Summary: NethServer specific NTP configuration files and templates
-Version: 1.0.8
+Version: 1.0.9
 Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 BuildRequires: nethserver-devtools
 URL: %{url_prefix}/%{name} 
-AutoReq: no
 
 Requires: nethserver-base
 Requires: ntp
@@ -25,14 +24,24 @@ perl createlinks
 %install
 rm -rf %{buildroot}
 (cd root   ; find . -depth -print | cpio -dump %{buildroot})
-%{genfilelist} %{buildroot} > %{name}-%{version}-filelist
+%{genfilelist} \
+    %{buildroot} > %{name}-%{version}-filelist
+echo "%doc COPYING"          >> %{name}-%{version}-filelist
+
+%clean 
+rm -rf %{buildroot}
+
+%post
 
 %files -f %{name}-%{version}-filelist
 %defattr(-,root,root)
-%doc COPYING
 %dir %{_nseventsdir}/%{name}-update
 
+
 %changelog
+* Tue Sep 29 2015 Davide Principi <davide.principi@nethesis.it> - 1.0.9-1
+- Make Italian language pack optional - Enhancement #3265 [NethServer]
+
 * Tue Mar 03 2015 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.8-1
 - Set PHP default timezone from system timezone - Enhancement #3068 [NethServer]
 - Date and time panel Save button - Bug #3023 [NethServer]
