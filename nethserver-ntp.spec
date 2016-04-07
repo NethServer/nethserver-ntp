@@ -1,5 +1,5 @@
 Name: nethserver-ntp
-Summary: NethServer specific NTP configuration files and templates
+Summary: NethServer specific Chrony configuration files and templates
 Version: 1.0.9
 Release: 1%{?dist}
 License: GPL
@@ -9,10 +9,10 @@ BuildRequires: nethserver-devtools
 URL: %{url_prefix}/%{name} 
 
 Requires: nethserver-base
-Requires: ntp
+Requires: chrony
 
 %description
-Configuration files and templates for the NTP daemon.
+Configuration files and templates for the Chrony daemon.
 
 %prep
 %setup

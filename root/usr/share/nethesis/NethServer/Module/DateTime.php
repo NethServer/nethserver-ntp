@@ -43,10 +43,10 @@ class DateTime extends \Nethgui\Controller\AbstractController
     {
         parent::initialize();
                                 
-        $this->declareParameter('status', Validate::SERVICESTATUS, array('configuration', 'ntpd', 'status'));        
+        $this->declareParameter('status', Validate::SERVICESTATUS, array('configuration', 'chronyd', 'status'));
         $this->declareParameter('date', Validate::DATE, array($this, 'getCurrentDate'));
         $this->declareParameter('time', Validate::TIME, array($this, 'getCurrentTime'));
-        $this->declareParameter('server', Validate::HOSTNAME, array('configuration', 'ntpd', 'NTPServer'));
+        $this->declareParameter('server', Validate::HOSTNAME, array('configuration', 'chronyd', 'NTPServer'));
         $this->declareParameter('timezone', $this->createValidator(), array('configuration', 'TimeZone', NULL));
     }
 

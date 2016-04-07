@@ -31,7 +31,7 @@ my $event = shift;
 my $ts = shift;
 
 my $db = esmith::ConfigDB->open or die "Could not open config db";
-my $status = $db->get_prop('ntpd', 'status') || '';
+my $status = $db->get_prop('chronyd', 'status') || '';
 
 if($status ne 'enabled') { 
     # manual date setting

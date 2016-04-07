@@ -32,7 +32,7 @@ event_actions('nethserver-ntp-save', qw(
 	      
 event_services('nethserver-ntp-save', qw(
     rsyslog condrestart
-    ntpd condrestart
+    chronyd condrestart
 ));
 
 #--------------------------------------------------
@@ -45,7 +45,7 @@ event_actions('nethserver-ntp-update', qw(
 ));
 
 event_services('nethserver-ntp-update', qw(
-    ntpd condrestart
+    chronyd condrestart
 ));
 
 
@@ -53,7 +53,7 @@ event_services('nethserver-ntp-update', qw(
 # templates
 #--------------------------------------------------
 event_templates($_,
-		'/etc/ntp.conf',
+		'/etc/chrony.conf'
 		) foreach(qw(
   nethserver-ntp-update
   nethserver-ntp-save

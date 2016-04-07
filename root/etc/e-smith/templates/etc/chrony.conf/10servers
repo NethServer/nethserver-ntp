@@ -2,10 +2,10 @@
 # 10servers
 #
 {
-    my $server_name = $ntpd{NTPServer} || '';
+    my $server_name = $chronyd{NTPServer} || '';
 
     if( ! $server_name) {
-	return "# missing ntpd/NTPServer prop value\n" 
+	return "# missing chronyd/NTPServer prop value\n"
     }
 
     if( ! $server_options) {
