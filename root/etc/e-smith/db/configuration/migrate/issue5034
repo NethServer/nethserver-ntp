@@ -1,0 +1,18 @@
+{
+    #
+    # issue5034 - move config from 'ntpd' to 'chronyd'
+    #
+    
+    use esmith::ConfigDB;
+
+    my $configDb = esmith::ConfigDB->open() || return '';
+
+
+    my $old = $configDb->get('ntpd') || return '';
+    $configDb->get_prop_and_delete('ntpd','SyncToHWClockSupported');
+    my $new = $configDb->get('chronyd') || $dstConfigDb->new_record('chronyd');
+    $new->merge_props($old->props);
+    $old->delete;
+
+    '';
+}

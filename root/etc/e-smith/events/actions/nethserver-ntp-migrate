@@ -42,11 +42,15 @@ my $service = 'TimeZone';
 my $old = $srcConfigDb->get($service);
 if( ! $old) {
     warn "[INFO] $service key not found in source ConfigDB. Nothing to do.\n";
-    exit(0);
+} else {
+    my $rec = $dstConfigDb->get($service) || $dstConfigDb->new_record($service);
+    $rec->set_value($old->prop('type'));
 }
 
-my $rec = $dstConfigDb->get($service) || $dstConfigDb->new_record($service);
-$rec->set_value($old->prop('type'));
+
+$old = $srcConfigDb->get('ntpd');
+$new = $dstConfigDb->get('chronyd') || $dstConfigDb->new_record('chronyd');
+$new->merge_props($old->props);
 
 
 #
