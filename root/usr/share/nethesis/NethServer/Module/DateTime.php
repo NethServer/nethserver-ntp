@@ -47,7 +47,7 @@ class DateTime extends \Nethgui\Controller\AbstractController
         $this->declareParameter('date', Validate::DATE, array($this, 'getCurrentDate'));
         $this->declareParameter('time', Validate::TIME, array($this, 'getCurrentTime'));
         $this->declareParameter('server', Validate::HOSTNAME, array('configuration', 'chronyd', 'NTPServer'));
-        $this->declareParameter('timezone', $this->createValidator(), array('configuration', 'TimeZone', NULL));
+        $this->declareParameter('timezone', $this->createValidator(), array('NethServer::Database::Timedate', 'Timezone'));
     }
 
     public function bind(\Nethgui\Controller\RequestInterface $request)

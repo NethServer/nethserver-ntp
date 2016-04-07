@@ -10,6 +10,7 @@ URL: %{url_prefix}/%{name}
 
 Requires: nethserver-base
 Requires: chrony
+Requires: perl(NethServer::Database::Timedate)
 
 %description
 Configuration files and templates for the Chrony daemon.
