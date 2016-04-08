@@ -23,6 +23,7 @@
 use esmith::DB::db;
 use esmith::ConfigDB;
 use esmith::event;
+use NethServer::Database::Timedate;
 use strict;
 
 my $event = shift;
@@ -43,15 +44,13 @@ my $old = $srcConfigDb->get($service);
 if( ! $old) {
     warn "[INFO] $service key not found in source ConfigDB. Nothing to do.\n";
 } else {
-    my $rec = $dstConfigDb->get($service) || $dstConfigDb->new_record($service);
-    $rec->set_value($old->prop('type'));
+    tie my $tdb, 'NethServer::Database::Timedate';
+    $tdb{'Timezone'} = $old->prop('type') || 'UTC';
 }
-
 
 $old = $srcConfigDb->get('ntpd');
 $new = $dstConfigDb->get('chronyd') || $dstConfigDb->new_record('chronyd');
 $new->merge_props($old->props);
-
 
 #
 # Apply configuration
