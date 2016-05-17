@@ -31,6 +31,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %dir %{_nseventsdir}/%{name}-update
 %doc COPYING
+%doc README.rst
 
 %changelog
 * Tue Sep 29 2015 Davide Principi <davide.principi@nethesis.it> - 1.0.9-1
