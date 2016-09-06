@@ -2,21 +2,13 @@
 # 10servers
 #
 {
-    my $server_name = $chronyd{NTPServer} || '';
+    my $server_name = $chronyd{NTPServer} || 'pool.ntp.org';
 
-    if( ! $server_name) {
-	return "# missing chronyd/NTPServer prop value\n"
-    }
-
-    if( ! $server_options) {
-	$server_options = 'iburst';
-    }
-
-    if ($server_name =~ /\.?pool\.ntp\.org$/) {
-	# Special configuration for *ntp.org
-        $OUT .= "server $_.${server_name} ${server_options}\n" for (0..3);
+    if ($server_name =~ /pool/) {
+        # Use pool directive for NTP pools
+        $OUT = "pool ${server_name} iburst";
     } else {
-        $OUT .= "server ${server_name} ${server_options}\n";
+        $OUT = "server ${server_name} iburst";
     }
 }
 
