@@ -12,7 +12,7 @@
     my $chrony =  $configDb->get('chronyd');
     return '' if ($chrony);
     $configDb->get_prop_and_delete('ntpd','SyncToHWClockSupported');
-    my $new = $configDb->get('chronyd') || $configDb->new_record('chronyd', 'service');
+    my $new = $configDb->get('chronyd') || $configDb->new_record('chronyd', { type => 'service'});
     $new->merge_props($old->props);
     $old->delete;
 
