@@ -36,7 +36,8 @@ my $status = $db->get_prop('chronyd', 'status') || '';
 if($status ne 'enabled') { 
     # manual date setting
     if( ! defined $ts) {
-	die("No timestamp specified");
+        warn("[NOTICE] No timestamp specified, nothing to do.");
+        exit(0);
     }
 
     # Set the system time and hardware clock
