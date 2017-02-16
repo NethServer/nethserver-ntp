@@ -44,13 +44,14 @@ my $old = $srcConfigDb->get($service);
 if( ! $old) {
     warn "[INFO] $service key not found in source ConfigDB. Nothing to do.\n";
 } else {
-    tie my $tdb, 'NethServer::Database::Timedate';
-    $tdb{'Timezone'} = $old->prop('type') || 'UTC';
+    my $tz =  $old->prop('type') || 'UTC';
+    system("/usr/bin/timedatectl set-timezone '$tz'");
 }
 
 $old = $srcConfigDb->get('ntpd');
-$new = $dstConfigDb->get('chronyd') || $dstConfigDb->new_record('chronyd');
-$new->merge_props($old->props);
+my $new = $dstConfigDb->get('chronyd') || $dstConfigDb->new_record('chronyd');
+my $server = $old->prop('NTPServer') || 'pool.ntp.org';
+$new->set_prop('NTPServer', $server);
 
 #
 # Apply configuration
