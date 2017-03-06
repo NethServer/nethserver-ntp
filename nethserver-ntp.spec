@@ -1,6 +1,6 @@
 Name: nethserver-ntp
 Summary: NethServer specific Chrony configuration files and templates
-Version: 1.1.1
+Version: 1.1.2
 Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
@@ -34,6 +34,9 @@ rm -rf %{buildroot}
 %doc README.rst
 
 %changelog
+* Mon Mar 06 2017 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.2-1
+- Migration from sme8 - NethServer/dev#5196
+
 * Thu Jan 12 2017 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.1-1
 - Avoid clock adjust false error condition - NethServer/nethserver-ntp#6
 - Fix warnings on migration
