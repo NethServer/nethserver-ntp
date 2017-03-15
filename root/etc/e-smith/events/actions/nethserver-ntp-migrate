@@ -50,8 +50,12 @@ if( ! $old) {
 
 $old = $srcConfigDb->get('ntpd');
 my $new = $dstConfigDb->get('chronyd') || $dstConfigDb->new_record('chronyd');
-my $server = $old->prop('NTPServer') || 'pool.ntp.org';
-$new->set_prop('NTPServer', $server);
+my $server = $old->prop('NTPServer') || 'smeserver.pool.ntp.org';
+
+# Do not migrate bad server name from SME default
+if ($server ne 'smeserver.pool.ntp.org') {
+    $new->set_prop('NTPServer', $server);
+}
 
 #
 # Apply configuration
